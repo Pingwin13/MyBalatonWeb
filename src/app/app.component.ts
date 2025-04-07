@@ -9,5 +9,5 @@ import {MainComponent} from './main/main.component';
   styleUrl: './app.component.scss'
 })
 export class AppComponent {
-  title = 'MyBalaton';
+  title = 'MyBalatonn';
 }
