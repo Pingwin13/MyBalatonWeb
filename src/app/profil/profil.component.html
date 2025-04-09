@@ -1,0 +1,16 @@
+<div class="profile-container">
+  <h1>Profiloldal</h1>
+
+  <div class="user-info">
+    <h2>Felhasználói adatok</h2>
+    <p><strong>Név:</strong> {{ user.name }}</p>
+    <p><strong>Email:</strong> {{ user.email }}</p>
+    <p><strong>Regisztráció dátuma:</strong> {{ user.registrationDate | date }}</p>
+  </div>
+
+  <button mat-button (click)="logout()">
+    <mat-icon>logout</mat-icon>
+    Kijelentkezés
+  </button>
+</div>
+

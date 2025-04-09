@@ -1,0 +1,34 @@
+<div class="register-container">
+  <mat-card class="register-card">
+    <h2>Regisztráció</h2>
+    <form (ngSubmit)="onRegister()" [formGroup]="registerForm">
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Teljes név</mat-label>
+        <input matInput formControlName="name" required>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Email cím</mat-label>
+        <input matInput type="email" formControlName="email" required>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Jelszó</mat-label>
+        <input matInput type="password" formControlName="password" required>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Jelszó újra</mat-label>
+        <input matInput type="password" formControlName="confirmPassword" required>
+      </mat-form-field>
+
+      <mat-error *ngIf="passwordMismatch">
+        A jelszavak nem egyeznek!
+      </mat-error>
+
+      <button mat-raised-button color="primary" class="full-width" type="submit" [disabled]="registerForm.invalid">
+        Regisztrálok
+      </button>
+    </form>
+  </mat-card>
+</div>

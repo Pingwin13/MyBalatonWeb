@@ -1,0 +1,16 @@
+<div class="places-container">
+  <div class="places-grid">
+    <mat-card class="place-card" *ngFor="let item of places">
+      <mat-card-header>
+        <div class="mat-card-header-text">
+          <mat-card-title>{{ item.name }}</mat-card-title>
+        </div>
+      </mat-card-header>
+      <img class="img-card" mat-card-image [src]="item.imageUrl" [alt]="item.name" />
+      <mat-card-content>
+        <p>{{ item.description }}</p>
+      </mat-card-content>
+    </mat-card>
+    <h3>Összes látnivaló: {{ places.length }}</h3>
+  </div>
+</div>

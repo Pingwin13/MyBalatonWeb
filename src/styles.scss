@@ -1,1 +1,33 @@
 /* You can add global styles to this file, and also import other style files */
+@use '@angular/material/prebuilt-themes/azure-blue.css';
+
+$container-color: #094060;
+$container-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+
+html, body { height: 100%; }
+body { margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif }
+
+@mixin formatAuth($sel){
+  #{$sel} {
+    background-color: #094060;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 75%;
+    padding: 10px;
+    border-radius: 10px;
+
+    @media(min-width: 768px) {
+      width: 25%;
+    }
+  }
+}
+
+@keyframes gradientAnimation {
+  0% { background-position: 0 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0 50%; }
+}

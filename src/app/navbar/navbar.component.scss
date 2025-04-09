@@ -1,0 +1,88 @@
+@use '../../styles';
+
+mat-toolbar.main-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 99;
+  padding: 0 16px;
+  box-shadow: styles.$container-shadow;
+
+  .mobile-menu-button {
+    display: block;
+    z-index: 100;
+    color: #1a1f5e;
+    @media(min-width: 768px) {
+      display: none;
+    }
+  }
+
+  .nav-links {
+    position: absolute;
+    top: 64px;
+    left: 0;
+    width: 100%;
+    background-color: #1a1f5e;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 16px;
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity 0.3s ease, visibility 0s 0.3s;
+
+    button {
+      color: #ffffff;
+      justify-content: flex-start;
+      gap: 8px;
+    }
+
+    .search-field {
+      margin-top: 16px;
+      width: 100%;
+      max-width: 400px;
+      display: flex;
+    }
+
+    .clear-icon {
+      cursor: pointer;
+      color: rgba(0, 0, 0, 0.54); /* Material default icon color */
+    }
+
+    &.show {
+      visibility: visible;
+      opacity: 1;
+      transition: opacity 0.3s ease;
+    }
+
+    @media(min-width: 768px) {
+      position: static;
+      flex-direction: row;
+      align-items: center;
+      background: transparent;
+      width: auto;
+      visibility: visible;
+      opacity: 1;
+      padding: 0;
+      gap: 10px;
+
+      .search-field {
+        width: 200px;
+        margin-left: auto;
+      }
+
+      button {
+        color: #1a1f5e;
+        text-transform: none;
+      }
+    }
+  }
+
+  .active {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+  }
+}

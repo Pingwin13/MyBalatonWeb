@@ -1,1 +1,59 @@
+<mat-toolbar color="primary" class="main-toolbar">
+  <button mat-icon-button class="mobile-menu-button" (click)="toggleMenu()">
+    <mat-icon>menu</mat-icon>
+  </button>
 
+  <div class="nav-links" [ngClass]="{ 'show': menuOpen }">
+    <button mat-button routerLink="/home" routerLinkActive="active" (click)="toggleMenu()">
+      <mat-icon>home</mat-icon>
+      Home
+    </button>
+
+    <button mat-button routerLink="/places" routerLinkActive="active" (click)="toggleMenu()">
+      <mat-icon>place</mat-icon>
+      Látnivalók
+    </button>
+
+    <button *ngIf="isLoggedIn" mat-button routerLink="/add" routerLinkActive="active" (click)="toggleMenu()">
+      <mat-icon>add_location</mat-icon>
+      Hozzáadás
+    </button>
+
+    <ng-container *ngIf="!isLoggedIn">
+      <button mat-button routerLink="/login" (click)="toggleMenu()">
+        <mat-icon>login</mat-icon>
+        Bejelentkezés
+      </button>
+      <button mat-button routerLink="/register" (click)="toggleMenu()">
+        <mat-icon>person_add</mat-icon>
+        Regisztráció
+      </button>
+    </ng-container>
+
+
+    <mat-form-field appearance="outline" class="search-field">
+      <mat-icon matPrefix>search</mat-icon>
+      <input matInput type="text" [(ngModel)]="searchQuery" (input)="onSearch()" placeholder="Keresés...">
+
+      <mat-icon
+        matSuffix
+        class="clear-icon"
+        *ngIf="searchQuery"
+        (click)="clearSearch()">
+        close
+      </mat-icon>
+    </mat-form-field>
+
+
+    <ng-container *ngIf="isLoggedIn">
+      <button mat-button [routerLink]="['/profil']">
+        <mat-icon>person</mat-icon>
+        Profil
+      </button>
+      <button mat-button (click)="logout()">
+        <mat-icon>logout</mat-icon>
+        Kijelentkezés
+      </button>
+    </ng-container>
+  </div>
+</mat-toolbar>
