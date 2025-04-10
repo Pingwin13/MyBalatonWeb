@@ -5,6 +5,7 @@ import { User } from '../models/user.model';
 import {MatCard, MatCardContent, MatCardHeader, MatCardImage} from '@angular/material/card';
 import { MatCardModule } from '@angular/material/card';
 import { CommonModule } from '@angular/common';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-places',
@@ -15,7 +16,8 @@ import { CommonModule } from '@angular/common';
     MatCardContent,
     CommonModule,
     MatCardModule,
-    MatCardImage
+    MatCardImage,
+    RouterLink
   ],
   styleUrls: ['./places.component.scss']
 })
@@ -25,7 +27,7 @@ export class PlacesComponent {
       id: 1,
       name: 'Balatonfüred',
       description: 'Gyönyörű parti sétány és híres borvidék.',
-      imageUrl: 'images/balatonfured.jpg',
+      imageUrl: 'images/balatonfureds.jpg',
       rating: 4.7,
       comments: [],
       createdBy: { id: 1, username: 'balatonfan', email: 'fan@balaton.hu' }

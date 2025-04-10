@@ -1,6 +1,6 @@
 <div class="places-container">
   <div class="places-grid">
-    <mat-card class="place-card" *ngFor="let item of places">
+    <mat-card class="place-card" *ngFor="let item of places" [routerLink]="['/place', item.id]">
       <mat-card-header>
         <div class="mat-card-header-text">
           <mat-card-title>{{ item.name }}</mat-card-title>
@@ -11,6 +11,8 @@
         <p>{{ item.description }}</p>
       </mat-card-content>
     </mat-card>
+  </div>
+  <div class="places-summary">
     <h3>Összes látnivaló: {{ places.length }}</h3>
   </div>
 </div>

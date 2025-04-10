@@ -1,1 +1,52 @@
-<p>place works!</p>
+<div class="place-detail-container" *ngIf="place">
+  <div class="place-header">
+    <h1>{{ place.name }}</h1>
+    <div class="rating">
+      <span>Értékelés: {{ place.rating }}/5</span>
+      <mat-icon class="star-icon">star</mat-icon>
+    </div>
+  </div>
+
+  <div class="place-image-container">
+    <img [src]="place.imageUrl" [alt]="place.name" class="place-image">
+  </div>
+
+  <mat-card class="place-info-card">
+    <mat-card-content>
+      <h2>Leírás</h2>
+      <p class="description">{{ place.description }}</p>
+      
+      <div class="created-by">
+        <h3>Hozzáadta</h3>
+        <p>{{ place.createdBy.username }}</p>
+      </div>
+      
+      <div class="comments-section" *ngIf="place.comments && place.comments.length > 0">
+        <h3>Kommentek ({{ place.comments.length }})</h3>
+        <div class="comment" *ngFor="let comment of place.comments">
+          <p class="comment-user">{{ comment.user.username }} - {{ comment.date | date }}</p>
+          <p class="comment-text">{{ comment.text }}</p>
+        </div>
+      </div>
+      
+      <div class="no-comments" *ngIf="!place.comments || place.comments.length === 0">
+        <p>Még nincsenek kommentek ehhez a helyhez.</p>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <div class="actions">
+    <button mat-button color="primary" routerLink="/places">
+      <mat-icon>arrow_back</mat-icon>
+      Vissza a listához
+    </button>
+  </div>
+</div>
+
+<div class="not-found" *ngIf="!place">
+  <h2>A keresett látnivaló nem található!</h2>
+  <button mat-button color="primary" routerLink="/places">
+    <mat-icon>arrow_back</mat-icon>
+    Vissza a listához
+  </button>
+</div>

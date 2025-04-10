@@ -53,7 +53,6 @@ export class NavbarComponent {
 
   onSearch() {
     console.log("Keresés:", this.searchQuery);
-    // Esetleg router.navigate paraméterrel a keresés oldalra
   }
 
   clearSearch() {

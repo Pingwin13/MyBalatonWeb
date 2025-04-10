@@ -1,16 +1,80 @@
 <div class="profile-container">
-  <h1>Profiloldal</h1>
-
-  <div class="user-info">
-    <h2>Felhasználói adatok</h2>
-    <p><strong>Név:</strong> {{ user.name }}</p>
-    <p><strong>Email:</strong> {{ user.email }}</p>
-    <p><strong>Regisztráció dátuma:</strong> {{ user.registrationDate | date }}</p>
+  <div class="profile-header">
+    <div class="avatar-container">
+      <img [src]="user.avatar" alt="Profilkép" class="avatar" onerror="this.src='/images/profil.jpg'">
+    </div>
+    <h1>{{ user.name }} profilja</h1>
   </div>
 
-  <button mat-button (click)="logout()">
-    <mat-icon>logout</mat-icon>
-    Kijelentkezés
-  </button>
+  <mat-card class="profile-card">
+    <mat-card-content>
+      <h2>Személyes adatok</h2>
+      <mat-divider></mat-divider>
+
+      <div class="info-row">
+        <div class="info-label">
+          <mat-icon>person</mat-icon>
+          <span>Név:</span>
+        </div>
+        <div class="info-value">{{ user.name }}</div>
+      </div>
+
+      <div class="info-row">
+        <div class="info-label">
+          <mat-icon>email</mat-icon>
+          <span>Email:</span>
+        </div>
+        <div class="info-value">{{ user.email }}</div>
+      </div>
+
+      <div class="info-row">
+        <div class="info-label">
+          <mat-icon>calendar_today</mat-icon>
+          <span>Regisztráció:</span>
+        </div>
+        <div class="info-value">{{ user.registrationDate | date:'yyyy. MMMM d.' }}</div>
+      </div>
+
+      <div class="info-row">
+        <div class="info-label">
+          <mat-icon>add_location</mat-icon>
+          <span>Hozzáadott helyek:</span>
+        </div>
+        <div class="info-value">{{ user.contributions }}</div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <mat-card class="profile-card favorites-card">
+    <mat-card-content>
+      <h2>Kedvenc helyek</h2>
+      <mat-divider></mat-divider>
+
+      <div class="favorite-places" *ngIf="user.favoriteLocations && user.favoriteLocations.length > 0">
+        <div class="favorite-place" *ngFor="let place of user.favoriteLocations">
+          <a [routerLink]="['/place', place.id]" class="place-link">
+            <mat-icon>favorite</mat-icon>
+            <span>{{ place.name }}</span>
+          </a>
+        </div>
+      </div>
+
+      <div class="no-favorites" *ngIf="!user.favoriteLocations || user.favoriteLocations.length === 0">
+        <p>Még nincsenek kedvenc helyek.</p>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <div class="actions">
+    <button mat-raised-button color="primary" routerLink="/places">
+      <mat-icon>place</mat-icon>
+      Látnivalók böngészése
+    </button>
+
+    <button mat-raised-button color="warn" (click)="logout()">
+      <mat-icon>logout</mat-icon>
+      Kijelentkezés
+    </button>
+  </div>
 </div>
 

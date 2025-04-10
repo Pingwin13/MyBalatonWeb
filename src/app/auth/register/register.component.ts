@@ -40,7 +40,6 @@ export class RegisterComponent {
     if (this.registerForm.valid && !this.passwordMismatch) {
       const { name, email } = this.registerForm.value;
       console.log('Sikeres regisztráció:', name, email, password);
-      // itt jöhet a backend hívás vagy további feldolgozás
     }
   }
 }

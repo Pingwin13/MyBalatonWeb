@@ -34,7 +34,6 @@ export class LoginComponent {
     if (this.loginForm.valid) {
       const { email, password } = this.loginForm.value;
       console.log('Bejelentkezési adatok:', email, password);
-      // Itt jöhet a backend hívás vagy router navigáció
     }
   }
 }
