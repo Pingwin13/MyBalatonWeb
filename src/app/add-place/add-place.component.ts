@@ -53,15 +53,11 @@ import { AuthService } from '../services/auth.service';
         </mat-card-content>
 
         <mat-card-actions class="actions">
-          <button mat-raised-button color="primary" type="submit" 
+          <button mat-raised-button color="primary" type="submit"
                   [disabled]="placeForm.invalid || !selectedFile || loading"
                   (click)="onSubmit()">
             <mat-icon>add_location</mat-icon>
             Hozzáadás
-          </button>
-          <button mat-button type="button" routerLink="/places">
-            <mat-icon>arrow_back</mat-icon>
-            Vissza
           </button>
         </mat-card-actions>
       </mat-card>
@@ -102,7 +98,6 @@ export class AddPlaceComponent {
     const input = event.target as HTMLInputElement;
     if (input.files && input.files.length > 0) {
       this.selectedFile = input.files[0];
-      // Kép előnézet létrehozása
       const reader = new FileReader();
       reader.onload = (e: any) => {
         this.imagePreviewUrl = e.target.result;
@@ -116,13 +111,11 @@ export class AddPlaceComponent {
     this.loading = true;
     this.error = null;
     try {
-      // 1. Kép feltöltése Firebase Storage-ba
       const filePath = `places/${Date.now()}_${this.selectedFile.name}`;
       const fileRef = ref(this.storage, filePath);
       await uploadBytes(fileRef, this.selectedFile);
       const imageUrl = await getDownloadURL(fileRef);
-      
-      // 2. Látnivaló mentése (Firestore)
+
       const user = this.authService.currentUser;
       await this.placeService.addPlace({
         name: this.placeForm.value.name,
@@ -132,7 +125,7 @@ export class AddPlaceComponent {
         comments: [],
         createdBy: user ? { id: 0, username: user.displayName || '', email: user.email || '' } : { id: 0, username: '', email: '' }
       });
-      
+
       this.router.navigate(['/places']);
     } catch (err) {
       this.error = 'Hiba történt a feltöltés során!';
@@ -140,4 +133,4 @@ export class AddPlaceComponent {
       this.loading = false;
     }
   }
-} 
+}
