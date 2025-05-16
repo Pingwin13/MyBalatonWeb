@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import {Router, RouterLink, RouterLinkActive} from '@angular/router';
 import {FormsModule} from '@angular/forms';
 import {MatFormField, MatInput, MatLabel, MatSuffix} from '@angular/material/input';
@@ -7,59 +7,95 @@ import {NgClass, NgIf} from '@angular/common';
 import {MatIcon} from '@angular/material/icon';
 import {MatToolbar} from '@angular/material/toolbar';
 import {MatDivider} from '@angular/material/divider';
+import { AuthService } from '../services/auth.service';
+import { Subscription, combineLatest, debounceTime, distinctUntilChanged } from 'rxjs';
+import { PlaceService } from '../services/place.service';
+import { Place } from '../models/place.model';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-navbar',
   templateUrl: './navbar.component.html',
   imports: [
+    CommonModule,
     FormsModule,
     RouterLink,
-    MatLabel,
     MatInput,
     MatIconButton,
     MatIcon,
     MatSuffix,
-    MatLabel,
     MatFormField,
     MatButton,
     NgIf,
     MatToolbar,
     NgClass,
-    MatDivider,
     RouterLinkActive
   ],
   styleUrls: ['./navbar.component.scss']
 })
-export class NavbarComponent {
+export class NavbarComponent implements OnInit, OnDestroy {
   searchQuery: string = '';
-  isLoggedIn: boolean = false;
+  isLoggedIn: boolean | null = null;
   menuOpen: boolean = false;
+  private authSub: Subscription | undefined;
+  searchResults: Place[] = [];
+  showResults: boolean = false;
 
-  constructor(private router: Router) {}
+  constructor(
+    private router: Router,
+    private authService: AuthService,
+    private placeService: PlaceService
+  ) {}
 
   ngOnInit() {
-    this.checkLoginStatus();
+    this.authSub = combineLatest([
+      this.authService.user$,
+      this.authService.loading$
+    ]).subscribe(([user, loading]) => {
+      if (!loading) {
+        this.isLoggedIn = !!user;
+      }
+    });
   }
 
-  checkLoginStatus() {
-    this.isLoggedIn = !!localStorage.getItem('user');
+  ngOnDestroy() {
+    this.authSub?.unsubscribe();
   }
 
   logout() {
-    localStorage.removeItem('user');
-    this.isLoggedIn = false;
-    this.router.navigate(['/']);
+    this.authService.logout().then(() => {
+      this.router.navigate(['/']);
+    });
   }
 
   onSearch() {
-    console.log("Keresés:", this.searchQuery);
+    if (this.searchQuery.trim().length > 0) {
+      this.placeService.searchPlaces(this.searchQuery).subscribe(places => {
+        this.searchResults = places;
+        this.showResults = true;
+      });
+    } else {
+      this.searchResults = [];
+      this.showResults = false;
+    }
   }
 
   clearSearch() {
     this.searchQuery = '';
+    this.searchResults = [];
+    this.showResults = false;
   }
 
+  onResultClick(place: Place) {
+    this.router.navigate(['/place', place.id]);
+    this.clearSearch();
+  }
 
+  onSearchBlur() {
+    setTimeout(() => {
+      this.showResults = false;
+    }, 200);
+  }
 
   toggleMenu() {
     this.menuOpen = !this.menuOpen;

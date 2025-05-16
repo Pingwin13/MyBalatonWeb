@@ -14,46 +14,66 @@
       Látnivalók
     </button>
 
-    <button *ngIf="isLoggedIn" mat-button routerLink="/add" routerLinkActive="active" (click)="toggleMenu()">
-      <mat-icon>add_location</mat-icon>
-      Hozzáadás
-    </button>
+    <div class="auth-buttons">
+      <ng-container *ngIf="isLoggedIn === true">
+        <button mat-button routerLink="/add" routerLinkActive="active" (click)="toggleMenu()">
+          <mat-icon>add_location</mat-icon>
+          Hozzáadás
+        </button>
+        <button mat-button [routerLink]="['/profil']">
+          <mat-icon>person</mat-icon>
+          Profil
+        </button>
+        <button mat-button (click)="logout()">
+          <mat-icon>logout</mat-icon>
+          Kijelentkezés
+        </button>
+      </ng-container>
 
-    <ng-container *ngIf="!isLoggedIn">
-      <button mat-button routerLink="/login" (click)="toggleMenu()">
-        <mat-icon>login</mat-icon>
-        Bejelentkezés
-      </button>
-      <button mat-button routerLink="/register" (click)="toggleMenu()">
-        <mat-icon>person_add</mat-icon>
-        Regisztráció
-      </button>
-    </ng-container>
+      <ng-container *ngIf="isLoggedIn === false">
+        <button mat-button routerLink="/login" (click)="toggleMenu()">
+          <mat-icon>login</mat-icon>
+          Bejelentkezés
+        </button>
+        <button mat-button routerLink="/register" (click)="toggleMenu()">
+          <mat-icon>person_add</mat-icon>
+          Regisztráció
+        </button>
+      </ng-container>
 
+      <ng-container *ngIf="isLoggedIn === null">
+        <div class="auth-placeholder"></div>
+      </ng-container>
+    </div>
 
-    <mat-form-field appearance="outline" class="search-field">
-      <mat-icon matPrefix>search</mat-icon>
-      <input matInput type="text" [(ngModel)]="searchQuery" (input)="onSearch()" placeholder="Keresés...">
+    <div class="search-container">
+      <mat-form-field appearance="outline" class="search-field">
+        <mat-icon matPrefix>search</mat-icon>
+        <input matInput 
+               type="text" 
+               [(ngModel)]="searchQuery" 
+               (input)="onSearch()" 
+               (blur)="onSearchBlur()"
+               placeholder="Keresés...">
 
-      <mat-icon
-        matSuffix
-        class="clear-icon"
-        *ngIf="searchQuery"
-        (click)="clearSearch()">
-        close
-      </mat-icon>
-    </mat-form-field>
+        <mat-icon
+          matSuffix
+          class="clear-icon"
+          *ngIf="searchQuery"
+          (click)="clearSearch()">
+          close
+        </mat-icon>
+      </mat-form-field>
 
-
-    <ng-container *ngIf="isLoggedIn">
-      <button mat-button [routerLink]="['/profil']">
-        <mat-icon>person</mat-icon>
-        Profil
-      </button>
-      <button mat-button (click)="logout()">
-        <mat-icon>logout</mat-icon>
-        Kijelentkezés
-      </button>
-    </ng-container>
+      <div class="search-results" *ngIf="showResults && searchResults.length > 0">
+        <div class="result-item" *ngFor="let place of searchResults" (click)="onResultClick(place)">
+          <img [src]="place.imageUrl" [alt]="place.name" class="result-image">
+          <div class="result-info">
+            <div class="result-name">{{ place.name }}</div>
+            <div class="result-description">{{ place.description | slice:0:50 }}...</div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </mat-toolbar>

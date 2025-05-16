@@ -1,46 +1,63 @@
-<div class="place-detail-container" *ngIf="place">
-  <div class="place-header">
-    <h1>{{ place.name }}</h1>
-    <div class="rating">
-      <span>Értékelés: {{ place.rating }}/5</span>
-      <mat-icon class="star-icon">star</mat-icon>
-    </div>
-  </div>
-
-  <div class="place-image-container">
-    <img [src]="place.imageUrl" [alt]="place.name" class="place-image">
-  </div>
-
-  <mat-card class="place-info-card">
+<div class="place-container" *ngIf="place">
+  <mat-card class="place-card">
+    <img mat-card-image [src]="place.imageUrl" [alt]="place.name">
     <mat-card-content>
-      <h2>Leírás</h2>
-      <p class="description">{{ place.description }}</p>
-      
-      <div class="created-by">
-        <h3>Hozzáadta</h3>
-        <p>{{ place.createdBy.username }}</p>
+      <h1>{{ place.name }}</h1>
+      <div class="rating">
+        <ng-container *ngIf="place.ratings && place.ratings.length > 0; else noRating">
+          <ng-container *ngIf="currentUserId">
+            <span *ngFor="let star of [1,2,3,4,5]" (click)="onRate(star)" [class.filled]="star <= userRating">
+              <mat-icon>{{ star <= userRating ? 'star' : 'star_border' }}</mat-icon>
+            </span>
+          </ng-container>
+          <span class="rating-value">Átlag: {{ averageRating }} ({{ place.ratings.length }} értékelés)</span>
+        </ng-container>
+        <ng-template #noRating>
+          <ng-container *ngIf="currentUserId">
+            <span *ngFor="let star of [1,2,3,4,5]" (click)="onRate(star)" [class.filled]="star <= userRating">
+              <mat-icon>{{ star <= userRating ? 'star' : 'star_border' }}</mat-icon>
+            </span>
+            <span class="rating-value">Még nincs értékelés</span>
+          </ng-container>
+          <span *ngIf="!currentUserId">Még nincs értékelés</span>
+        </ng-template>
       </div>
+      <p>{{ place.description }}</p>
       
-      <div class="comments-section" *ngIf="place.comments && place.comments.length > 0">
-        <h3>Kommentek ({{ place.comments.length }})</h3>
-        <div class="comment" *ngFor="let comment of place.comments">
-          <p class="comment-user">{{ comment.user.username }} - {{ comment.date | date }}</p>
-          <p class="comment-text">{{ comment.text }}</p>
+      <div class="view-switcher">
+        <button mat-button (click)="switchView('info')">Információk</button>
+        <button mat-button (click)="switchView('comments')">Hozzászólások</button>
+        <button mat-button (click)="switchView('map')">Térkép</button>
+      </div>
+
+      <div [ngSwitch]="currentView">
+        <div *ngSwitchCase="'info'">
+          <h3>Részletes információk</h3>
+          <p>Létrehozta: {{ place.createdBy.username }}</p>
+          <p>Hozzászólások száma: {{ place.comments | placeCount }}</p>
         </div>
-      </div>
-      
-      <div class="no-comments" *ngIf="!place.comments || place.comments.length === 0">
-        <p>Még nincsenek kommentek ehhez a helyhez.</p>
+        <div *ngSwitchCase="'comments'">
+          <ng-container *ngIf="currentUserId; else loginToComment">
+            <app-comment
+              [comments]="place.comments"
+              [currentUserId]="currentUserId"
+              (addComment)="onAddComment($event)"
+              (deleteComment)="onDeleteComment($event)"
+              (commentCountChange)="onCommentCountChange($event)">
+            </app-comment>
+          </ng-container>
+          <ng-template #loginToComment>
+            <p>Hozzászólni csak bejelentkezve lehet.</p>
+            <app-comment [comments]="place.comments" [currentUserId]="''"></app-comment>
+          </ng-template>
+        </div>
+        <div *ngSwitchCase="'map'">
+          <h3>Térkép</h3>
+          <p>Térkép megjelenítése...</p>
+        </div>
       </div>
     </mat-card-content>
   </mat-card>
-
-  <div class="actions">
-    <button mat-button color="primary" routerLink="/places">
-      <mat-icon>arrow_back</mat-icon>
-      Vissza a listához
-    </button>
-  </div>
 </div>
 
 <div class="not-found" *ngIf="!place">

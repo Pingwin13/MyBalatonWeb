@@ -40,11 +40,94 @@ mat-toolbar.main-toolbar {
       gap: 8px;
     }
 
-    .search-field {
-      margin-top: 16px;
+    .auth-buttons {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      min-height: 120px;
+      
+      .auth-placeholder {
+        height: 120px;
+      }
+
+      @media(min-width: 768px) {
+        flex-direction: row;
+        min-height: 48px;
+        align-items: center;
+        
+        .auth-placeholder {
+          height: 48px;
+        }
+      }
+    }
+
+    .search-container {
+      position: relative;
       width: 100%;
       max-width: 400px;
-      display: flex;
+      margin: 0 auto;
+
+      .search-field {
+        width: 100%;
+        margin: 0;
+      }
+
+      .search-results {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background: white;
+        border-radius: 4px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        margin-top: 4px;
+        max-height: 400px;
+        overflow-y: auto;
+        z-index: 1000;
+
+        .result-item {
+          display: flex;
+          padding: 8px;
+          cursor: pointer;
+          border-bottom: 1px solid #eee;
+          transition: background-color 0.2s;
+
+          &:hover {
+            background-color: #f5f5f5;
+          }
+
+          &:last-child {
+            border-bottom: none;
+          }
+
+          .result-image {
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 4px;
+            margin-right: 12px;
+          }
+
+          .result-info {
+            flex: 1;
+            overflow: hidden;
+
+            .result-name {
+              font-weight: 500;
+              color: #1976d2;
+              margin-bottom: 4px;
+            }
+
+            .result-description {
+              color: #666;
+              font-size: 0.875rem;
+              white-space: nowrap;
+              overflow: hidden;
+              text-overflow: ellipsis;
+            }
+          }
+        }
+      }
     }
 
     .clear-icon {
@@ -69,7 +152,7 @@ mat-toolbar.main-toolbar {
       padding: 0;
       gap: 10px;
 
-      .search-field {
+      .search-container {
         width: 200px;
         margin-left: auto;
       }

@@ -1,66 +1,59 @@
-<div class="profile-container">
+<div class="profile-container" *ngIf="user">
   <div class="profile-header">
     <div class="avatar-container">
-      <img [src]="user.avatar" alt="Profilkép" class="avatar" onerror="this.src='/images/profil.jpg'">
+      <img [src]="user.photoURL || '/images/profil.jpg'" alt="Profilkép" class="avatar">
     </div>
-    <h1>{{ user.name }} profilja</h1>
   </div>
 
   <mat-card class="profile-card">
+    <mat-card-header>
+      <mat-card-title>{{ user.displayName || user.email }}</mat-card-title>
+    </mat-card-header>
+
     <mat-card-content>
-      <h2>Személyes adatok</h2>
       <mat-divider></mat-divider>
-
-      <div class="info-row">
-        <div class="info-label">
-          <mat-icon>person</mat-icon>
-          <span>Név:</span>
+      <div class="favorite-places">
+        <h3>Saját feltöltött látnivalók</h3>
+        <div *ngIf="myPlaces.length === 0" class="no-favorites">
+          <p>Még nem töltöttél fel látnivalót.</p>
         </div>
-        <div class="info-value">{{ user.name }}</div>
-      </div>
-
-      <div class="info-row">
-        <div class="info-label">
-          <mat-icon>email</mat-icon>
-          <span>Email:</span>
+        <div *ngFor="let place of myPlaces" class="my-place-card">
+          <mat-card>
+            <mat-card-header>
+              <mat-card-title>{{ place.name }}</mat-card-title>
+            </mat-card-header>
+            <img mat-card-image [src]="place.imageUrl" [alt]="place.name">
+            <mat-card-content>
+              <p>{{ place.description }}</p>
+              <div *ngIf="editingPlace && editingPlace.id === place.id">
+                <form *ngIf="editForm" [formGroup]="editForm">
+                  <mat-form-field appearance="outline" class="full-width">
+                    <mat-label>Név</mat-label>
+                    <input matInput formControlName="name" required>
+                  </mat-form-field>
+                  <mat-form-field appearance="outline" class="full-width">
+                    <mat-label>Leírás</mat-label>
+                    <textarea matInput formControlName="description" rows="3" required></textarea>
+                  </mat-form-field>
+                  <div class="full-width" style="margin-bottom: 16px;">
+                    <label for="editFileInput">Új kép (opcionális):</label>
+                    <input id="editFileInput" type="file" (change)="onEditFileSelected($event)">
+                  </div>
+                  <div style="margin-bottom: 8px;">
+                    <img [src]="editingPlace.imageUrl" alt="Jelenlegi kép" style="max-width: 100%; max-height: 150px;">
+                  </div>
+                  <div *ngIf="editError" class="error">{{ editError }}</div>
+                  <button mat-raised-button color="primary" (click)="saveEdit()" [disabled]="editForm?.invalid || editLoading">Mentés</button>
+                  <button mat-button type="button" (click)="cancelEdit()">Mégse</button>
+                </form>
+              </div>
+            </mat-card-content>
+            <mat-card-actions *ngIf="!editingPlace || editingPlace.id !== place.id">
+              <button mat-button color="primary" (click)="editPlace(place)"><mat-icon>edit</mat-icon> Szerkesztés</button>
+              <button mat-button color="warn" (click)="deletePlace(place)"><mat-icon>delete</mat-icon> Törlés</button>
+            </mat-card-actions>
+          </mat-card>
         </div>
-        <div class="info-value">{{ user.email }}</div>
-      </div>
-
-      <div class="info-row">
-        <div class="info-label">
-          <mat-icon>calendar_today</mat-icon>
-          <span>Regisztráció:</span>
-        </div>
-        <div class="info-value">{{ user.registrationDate | date:'yyyy. MMMM d.' }}</div>
-      </div>
-
-      <div class="info-row">
-        <div class="info-label">
-          <mat-icon>add_location</mat-icon>
-          <span>Hozzáadott helyek:</span>
-        </div>
-        <div class="info-value">{{ user.contributions }}</div>
-      </div>
-    </mat-card-content>
-  </mat-card>
-
-  <mat-card class="profile-card favorites-card">
-    <mat-card-content>
-      <h2>Kedvenc helyek</h2>
-      <mat-divider></mat-divider>
-
-      <div class="favorite-places" *ngIf="user.favoriteLocations && user.favoriteLocations.length > 0">
-        <div class="favorite-place" *ngFor="let place of user.favoriteLocations">
-          <a [routerLink]="['/place', place.id]" class="place-link">
-            <mat-icon>favorite</mat-icon>
-            <span>{{ place.name }}</span>
-          </a>
-        </div>
-      </div>
-
-      <div class="no-favorites" *ngIf="!user.favoriteLocations || user.favoriteLocations.length === 0">
-        <p>Még nincsenek kedvenc helyek.</p>
       </div>
     </mat-card-content>
   </mat-card>
@@ -75,6 +68,35 @@
       <mat-icon>logout</mat-icon>
       Kijelentkezés
     </button>
+
+    <button mat-raised-button color="warn" (click)="showDeleteProfileConfirm = true">
+      <mat-icon>person_remove</mat-icon>
+      Profil törlése
+    </button>
   </div>
+
+  <div *ngIf="showDeleteProfileConfirm" class="delete-profile-confirm">
+    <mat-card>
+      <mat-card-content>
+        <p>Biztosan törölni szeretnéd a profilodat? Ez a művelet nem visszavonható!</p>
+        <div *ngIf="deleteProfileError" class="error">{{ deleteProfileError }}</div>
+        <button mat-raised-button color="warn" (click)="deleteProfile()" [disabled]="deleteProfileLoading">
+          <mat-icon>person_remove</mat-icon>
+          Igen, törlöm a profilom
+        </button>
+        <button mat-button (click)="showDeleteProfileConfirm = false" [disabled]="deleteProfileLoading">
+          Mégse
+        </button>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>
+
+<div class="not-found" *ngIf="!user">
+  <h2>Felhasználói adatok nem találhatók!</h2>
+  <button mat-raised-button color="primary" routerLink="/login">
+    <mat-icon>login</mat-icon>
+    Bejelentkezés
+  </button>
 </div>
 

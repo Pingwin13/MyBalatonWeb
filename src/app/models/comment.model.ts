@@ -1,10 +1,10 @@
 import {User} from './user.model';
 
-export class Comment {
-  constructor(
-    public id: number,
-    public user: User,
-    public text: string,
-    public date: Date
-  ) {}
+export interface Comment {
+  id: number;
+  text: string;
+  author: string;
+  authorId: string;
+  date: Date;
+  placeId: string;
 }

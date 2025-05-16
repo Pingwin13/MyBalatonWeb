@@ -2,10 +2,6 @@
   <mat-card class="register-card">
     <h2>Regisztráció</h2>
     <form (ngSubmit)="onRegister()" [formGroup]="registerForm">
-      <mat-form-field appearance="outline" class="full-width">
-        <mat-label>Teljes név</mat-label>
-        <input matInput formControlName="name" required>
-      </mat-form-field>
 
       <mat-form-field appearance="outline" class="full-width">
         <mat-label>Email cím</mat-label>

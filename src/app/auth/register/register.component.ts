@@ -4,6 +4,8 @@ import {MatCard} from '@angular/material/card';
 import {MatError, MatFormField, MatInput, MatLabel} from '@angular/material/input';
 import {MatButton} from '@angular/material/button';
 import {NgIf} from '@angular/common';
+import { Router } from '@angular/router';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-register',
@@ -23,8 +25,9 @@ import {NgIf} from '@angular/common';
 export class RegisterComponent {
   registerForm: FormGroup;
   passwordMismatch: boolean = false;
+  error: string | null = null;
 
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder, private authService: AuthService, private router: Router) {
     this.registerForm = this.fb.group({
       name: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
@@ -38,8 +41,14 @@ export class RegisterComponent {
     this.passwordMismatch = password !== confirmPassword;
 
     if (this.registerForm.valid && !this.passwordMismatch) {
-      const { name, email } = this.registerForm.value;
-      console.log('Sikeres regisztráció:', name, email, password);
+      const { email, password } = this.registerForm.value;
+      this.authService.register(email, password)
+        .then(() => {
+          this.router.navigate(['/home']);
+        })
+        .catch(err => {
+          this.error = 'A regisztráció sikertelen!';
+        });
     }
   }
 }
