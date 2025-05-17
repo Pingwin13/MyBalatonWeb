@@ -12,14 +12,17 @@ A látnivalóknál megvalósulnak a teljes CRUD műveletek, Kommenteknél csak C
  Place,User,Comment,Rating
 ## 4.Reszponzív, mobile-first felület (minden adat látható és jól jelenik meg böngészőben is, mobil nézetben is)
   Material Design + saját SCSS, mobilbarát elrendezés.
-## 5.-6.Legalább 4, de 2 különböző attribútum direktíva használata és beépített vezérlési folyamat
+## 5.Legalább 4, de 2 különböző attribútum direktíva használata
   *ngIf, *ngFor, [ngSwitch], [ngSwitchCase] 
-  ### itt találod:
-    src/app/place/place.component.html
-    src/app/profil/profil.component.html
-    src/app/comment/comment.component.ts
+## 6.Legalább 4, de 2 különböző beépített vezérlési folyamat használata (if, switch, for)
+  if(profil,place,navbar)
+  switch(place)
+  for(profil,places,place,comment)
+  if-else(place)
 ## 7.Adatátadás szülő és gyermek komponensek között (legalább 3 @Input és 3 @Output)
   comment.component.ts 86.sorától
+  A szülő komponens (PlaceComponent) átadja a hozzászólásokat és a felhasználó azonosítót
+  A gyermek komponens (CommentComponent) visszaküldi az új hozzászólásokat, törlési kéréseket és a hozzászólások számának változását
 ## 8.Legalább 10 különböző Material elem helyes használata.
   MatCardModule, MatButtonModule, MatIconModule, MatFormFieldModule, MatInputModule,     
   MatDividerModule, MatLabel, MatError, MatCardHeader, MatCardTitle, stb.
@@ -40,10 +43,11 @@ place.service.ts
   Promise: addPlace
   Observable: getPlaces,getPlaceByID, updatePlace, deletePlace
 ## 13.CRUD műveletek service-ekbe vannak kiszervezve és megfelelő módon injektálva lettek
+  place.service.ts és storage.service.ts
 ## 14.Legalább 4 komplex Firestore lekérdezés megvalósítása (where, rendezés, léptetés, limitálás)
-  Itt csak 2 van
-  Profilba a felhasználó látnivalói
-  navbar-ba a keresés
+  látnivalók oldalon a név szerinti rendezés (places.component.ts 38.sortól)
+  Profilba a felhasználó látnivalói (profil.component.ts 63.sor)
+  navbar-ba a keresés név szerint limitálással( place.service.ts 76.sortól)
 ## 15.Legalább 4 különböző route a különböző oldalak eléréséhez
   app.routes.ts
 ## 16.AuthGuard implementációja
