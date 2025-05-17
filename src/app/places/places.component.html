@@ -1,4 +1,11 @@
 <div class="places-container">
+  <div class="places-header">
+    <button mat-raised-button color="primary" (click)="sortByName()">
+      <mat-icon>sort_by_alpha</mat-icon>
+      Név szerint rendezés {{ sortDirection === 'asc' ? '(A-Z)' : '(Z-A)' }}
+    </button>
+  </div>
+
   <div class="places-grid">
     <mat-card class="place-card" *ngFor="let item of places" [routerLink]="['/place', item.id]">
       <mat-card-header>
@@ -9,10 +16,14 @@
       <img class="img-card" mat-card-image [src]="item.imageUrl" [alt]="item.name" />
       <mat-card-content>
         <p>{{ item.description }}</p>
+        <div class="rating" *ngIf="item.ratings && item.ratings.length > 0">
+          <span class="rating-stars">{{ (item.ratings | placeCount) > 0 ? (item.ratings | ratingStars) : 'Még nincs értékelés' }}</span>
+          <span class="rating-count">({{ item.ratings | placeCount }} értékelés)</span>
+        </div>
       </mat-card-content>
     </mat-card>
   </div>
   <div class="places-summary">
-    <h3>Összes látnivaló: {{ places.length }}</h3>
+    <h3>Összes látnivaló: {{ places | placeCount }}</h3>
   </div>
 </div>

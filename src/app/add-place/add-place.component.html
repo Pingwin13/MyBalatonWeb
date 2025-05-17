@@ -1,0 +1,47 @@
+<div class="add-place-container">
+  <mat-card class="add-place-card">
+    <mat-card-header>
+      <mat-card-title>Új látnivaló hozzáadása</mat-card-title>
+      <mat-card-subtitle>Töltsd ki az alábbi űrlapot a látnivaló hozzáadásához</mat-card-subtitle>
+    </mat-card-header>
+
+    <mat-card-content>
+      <form [formGroup]="placeForm" (ngSubmit)="onSubmit()" class="form-container">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Név</mat-label>
+          <input matInput formControlName="name" required>
+          <mat-error *ngIf="placeForm.get('name')?.hasError('required')">
+            A név megadása kötelező
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Leírás</mat-label>
+          <textarea matInput formControlName="description" rows="4" required></textarea>
+          <mat-error *ngIf="placeForm.get('description')?.hasError('required')">
+            A leírás megadása kötelező
+          </mat-error>
+        </mat-form-field>
+
+        <div class="full-width">
+          <label for="fileInput" class="file-input-label">Kép kiválasztása:</label>
+          <input id="fileInput" type="file" (change)="onFileSelected($event)" accept="image/*" required>
+          <div *ngIf="selectedFile" class="image-preview">
+            <img [src]="imagePreviewUrl" alt="Előnézet">
+          </div>
+        </div>
+
+        <div *ngIf="error" class="error">{{ error }}</div>
+      </form>
+    </mat-card-content>
+
+    <mat-card-actions class="actions">
+      <button mat-raised-button color="primary" type="submit"
+              [disabled]="placeForm.invalid || !selectedFile || loading"
+              (click)="onSubmit()">
+        <mat-icon>add_location</mat-icon>
+        Hozzáadás
+      </button>
+    </mat-card-actions>
+  </mat-card>
+</div> 

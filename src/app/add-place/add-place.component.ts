@@ -7,62 +7,14 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { Router } from '@angular/router';
-import { ref, uploadBytes, getDownloadURL, Storage } from '@angular/fire/storage';
 import { PlaceService } from '../services/place.service';
 import { AuthService } from '../services/auth.service';
+import { StorageService } from '../services/storage.service';
 
 @Component({
   selector: 'app-add-place',
   standalone: true,
-  template: `
-    <div class="add-place-container">
-      <mat-card class="add-place-card">
-        <mat-card-header>
-          <mat-card-title>Új látnivaló hozzáadása</mat-card-title>
-          <mat-card-subtitle>Töltsd ki az alábbi űrlapot a látnivaló hozzáadásához</mat-card-subtitle>
-        </mat-card-header>
-
-        <mat-card-content>
-          <form [formGroup]="placeForm" (ngSubmit)="onSubmit()" class="form-container">
-            <mat-form-field appearance="outline" class="full-width">
-              <mat-label>Név</mat-label>
-              <input matInput formControlName="name" required>
-              <mat-error *ngIf="placeForm.get('name')?.hasError('required')">
-                A név megadása kötelező
-              </mat-error>
-            </mat-form-field>
-
-            <mat-form-field appearance="outline" class="full-width">
-              <mat-label>Leírás</mat-label>
-              <textarea matInput formControlName="description" rows="4" required></textarea>
-              <mat-error *ngIf="placeForm.get('description')?.hasError('required')">
-                A leírás megadása kötelező
-              </mat-error>
-            </mat-form-field>
-
-            <div class="full-width">
-              <label for="fileInput" class="file-input-label">Kép kiválasztása:</label>
-              <input id="fileInput" type="file" (change)="onFileSelected($event)" accept="image/*" required>
-              <div *ngIf="selectedFile" class="image-preview">
-                <img [src]="imagePreviewUrl" alt="Előnézet">
-              </div>
-            </div>
-
-            <div *ngIf="error" class="error">{{ error }}</div>
-          </form>
-        </mat-card-content>
-
-        <mat-card-actions class="actions">
-          <button mat-raised-button color="primary" type="submit"
-                  [disabled]="placeForm.invalid || !selectedFile || loading"
-                  (click)="onSubmit()">
-            <mat-icon>add_location</mat-icon>
-            Hozzáadás
-          </button>
-        </mat-card-actions>
-      </mat-card>
-    </div>
-  `,
+  templateUrl: './add-place.component.html',
   styleUrls: ['./add-place.component.scss'],
   imports: [
     CommonModule,
@@ -86,7 +38,7 @@ export class AddPlaceComponent {
     private placeService: PlaceService,
     private router: Router,
     private authService: AuthService,
-    private storage: Storage
+    private storageService: StorageService
   ) {
     this.placeForm = this.fb.group({
       name: ['', Validators.required],
@@ -112,9 +64,7 @@ export class AddPlaceComponent {
     this.error = null;
     try {
       const filePath = `places/${Date.now()}_${this.selectedFile.name}`;
-      const fileRef = ref(this.storage, filePath);
-      await uploadBytes(fileRef, this.selectedFile);
-      const imageUrl = await getDownloadURL(fileRef);
+      const imageUrl = await this.storageService.uploadFile(this.selectedFile, filePath);
 
       const user = this.authService.currentUser;
       await this.placeService.addPlace({

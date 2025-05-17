@@ -1,57 +1,70 @@
 .places-container {
   padding: 24px;
   padding-top: 80px;
+}
+
+.places-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
 
   h2 {
-    margin-bottom: 24px;
+    margin: 0;
     color: #1a1f5e;
   }
 
-  .places-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    gap: 16px;
-    margin-bottom: 20px;
+  button {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+}
+
+.places-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.img-card {
+  height: 200px;
+  width: 200px;
+  object-fit: cover;
+  display: block;
+  margin: 0 auto;
+}
+
+.place-card {
+  padding: 16px;
+  text-align: center;
+  cursor: pointer;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
   }
 
-  .img-card {
-    height: 200px;
-    width: 200px;
-    object-fit: cover;
-    display: block;
-    margin: 0 auto;
-  }
+  mat-card-header {
+    display: flex;
+    justify-content: center;
 
-  .place-card {
-    padding: 16px;
-    text-align: center;
-    cursor: pointer;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-
-    &:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
-    }
-
-    mat-card-header {
-      display: flex;
-      justify-content: center;
-
-      ::ng-deep .mat-mdc-card-header-text {
-        margin: 0;
-        text-align: center;
-      }
+    ::ng-deep .mat-mdc-card-header-text {
+      margin: 0;
+      text-align: center;
     }
   }
+}
 
-  .places-summary {
-    text-align: center;
-    margin-top: 30px;
+.places-summary {
+  text-align: center;
+  margin-top: 30px;
 
-    h3 {
-      color: #ffffff;
-      font-size: 1.2rem;
-    }
+  h3 {
+    color: #ffffff;
+    font-size: 1.2rem;
   }
 }
 

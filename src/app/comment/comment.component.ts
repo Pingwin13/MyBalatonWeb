@@ -20,68 +20,8 @@ import { Comment } from '../models/comment.model';
     MatInputModule,
     FormsModule
   ],
-  template: `
-    <div class="comments-section">
-      <h3>Hozzászólások</h3>
-      
-      <div class="new-comment" *ngIf="currentUserId">
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Új hozzászólás</mat-label>
-          <textarea matInput [(ngModel)]="newComment" rows="3"></textarea>
-        </mat-form-field>
-        <button mat-raised-button color="primary" (click)="onAddComment()" [disabled]="!newComment">
-          Hozzászólás küldése
-        </button>
-      </div>
-
-      <div class="comments-list">
-        <mat-card class="comment-card" *ngFor="let comment of comments">
-          <mat-card-content>
-            <p>{{ comment.text }}</p>
-            <small>- {{ comment.author }}</small>
-            <button mat-icon-button color="warn" *ngIf="currentUserId && canDelete(comment)" (click)="onDeleteComment(comment)">
-              <mat-icon>delete</mat-icon>
-            </button>
-          </mat-card-content>
-        </mat-card>
-      </div>
-    </div>
-  `,
-  styles: [`
-    .comments-section {
-      margin-top: 20px;
-    }
-
-    .new-comment {
-      margin-bottom: 20px;
-    }
-
-    .full-width {
-      width: 100%;
-    }
-
-    .comments-list {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-
-    .comment-card {
-      position: relative;
-      
-      mat-card-content {
-        display: flex;
-        flex-direction: column;
-        gap: 8px;
-      }
-
-      button {
-        position: absolute;
-        top: 8px;
-        right: 8px;
-      }
-    }
-  `]
+  templateUrl: './comment.component.html',
+  styleUrls: ['./comment.component.scss']
 })
 export class CommentComponent {
   @Input() comments: Comment[] = [];

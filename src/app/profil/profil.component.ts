@@ -10,12 +10,12 @@ import { User } from 'firebase/auth';
 import { PlaceService } from '../services/place.service';
 import { Place } from '../models/place.model';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ref, uploadBytes, getDownloadURL, Storage } from '@angular/fire/storage';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatLabel } from '@angular/material/form-field';
 import { CommonModule } from '@angular/common';
+import { StorageService } from '../services/storage.service';
 
 @Component({
   selector: 'app-profile',
@@ -52,7 +52,7 @@ export class ProfilComponent implements OnInit {
     private authService: AuthService,
     private placeService: PlaceService,
     private fb: FormBuilder,
-    private storage: Storage,
+    private storageService: StorageService,
     private router: Router
   ) {}
 
@@ -109,9 +109,7 @@ export class ProfilComponent implements OnInit {
       let imageUrl = this.editingPlace.imageUrl;
       if (this.editSelectedFile) {
         const filePath = `places/${Date.now()}_${this.editSelectedFile.name}`;
-        const fileRef = ref(this.storage, filePath);
-        await uploadBytes(fileRef, this.editSelectedFile);
-        imageUrl = await getDownloadURL(fileRef);
+        imageUrl = await this.storageService.uploadFile(this.editSelectedFile, filePath);
       }
       await this.placeService.updatePlace(this.editingPlace.id, {
         name: this.editForm.value.name,

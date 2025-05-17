@@ -17,19 +17,36 @@ import { PlaceService } from '../services/place.service';
     MatCardModule,
     MatButtonModule,
     MatIconModule,
-    RouterLink
+    RouterLink,
+    RatingStarsPipe,
+    PlaceCountPipe
   ],
   templateUrl: './places.component.html',
   styleUrl: './places.component.scss'
 })
 export class PlacesComponent implements OnInit {
   places: Place[] = [];
+  sortDirection: 'asc' | 'desc' = 'asc';
 
   constructor(private placeService: PlaceService) {}
 
   ngOnInit(): void {
     this.placeService.getPlaces().subscribe(places => {
       this.places = places;
+      this.sortByName();
     });
+  }
+
+  sortByName(): void {
+    this.places.sort((a, b) => {
+      const nameA = a.name.toLowerCase();
+      const nameB = b.name.toLowerCase();
+      if (this.sortDirection === 'asc') {
+        return nameA.localeCompare(nameB);
+      } else {
+        return nameB.localeCompare(nameA);
+      }
+    });
+    this.sortDirection = this.sortDirection === 'asc' ? 'desc' : 'asc';
   }
 }

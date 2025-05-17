@@ -1,1 +1,25 @@
-<p>comment works!</p>
+<div class="comments-section">
+  <h3>Hozzászólások</h3>
+  
+  <div class="new-comment" *ngIf="currentUserId">
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Új hozzászólás</mat-label>
+      <textarea matInput [(ngModel)]="newComment" rows="3"></textarea>
+    </mat-form-field>
+    <button mat-raised-button color="primary" (click)="onAddComment()" [disabled]="!newComment">
+      Hozzászólás küldése
+    </button>
+  </div>
+
+  <div class="comments-list">
+    <mat-card class="comment-card" *ngFor="let comment of comments">
+      <mat-card-content>
+        <p>{{ comment.text }}</p>
+        <small>- {{ comment.author }}</small>
+        <button mat-icon-button color="warn" *ngIf="currentUserId && canDelete(comment)" (click)="onDeleteComment(comment)">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>

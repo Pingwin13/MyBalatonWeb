@@ -10,7 +10,7 @@
               <mat-icon>{{ star <= userRating ? 'star' : 'star_border' }}</mat-icon>
             </span>
           </ng-container>
-          <span class="rating-value">Átlag: {{ averageRating }} ({{ place.ratings.length }} értékelés)</span>
+          <span class="rating-value">Átlag: {{ averageRating | ratingStars }} ({{ place.ratings.length }} értékelés)</span>
         </ng-container>
         <ng-template #noRating>
           <ng-container *ngIf="currentUserId">

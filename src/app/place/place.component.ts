@@ -18,12 +18,14 @@ type ViewType = 'info' | 'comments' | 'map';
 
 @Component({
   selector: 'app-place',
+  standalone: true,
   imports: [
     CommonModule,
     MatCardModule,
     MatButtonModule,
     MatIconModule,
     RouterLink,
+    RatingStarsPipe,
     PlaceCountPipe,
     CommentComponent
   ],
